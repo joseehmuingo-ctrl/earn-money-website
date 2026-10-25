@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10251b">
+<title>Earn Money — Member Portal</title>
+<style>
+:root{--green:#123d2b;--lime:#b8f36b;--paper:#f5f7f2;--ink:#17241c;--muted:#68756c;--line:#dce4dc}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--green);color:#fff;padding:18px max(18px,calc((100% - 1050px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:1.3rem;font-weight:800;letter-spacing:-.04em}.brand span{color:var(--lime)}
+main{max-width:1050px;margin:28px auto;padding:0 16px}.hero{background:var(--green);color:#fff;padding:30px;border-radius:24px;display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center}
+.hero h1{font-size:clamp(2rem,6vw,3.6rem);line-height:1.02;margin:8px 0 14px;letter-spacing:-.05em}.hero p{color:#d8e7dc}.price{background:#ffffff12;border:1px solid #ffffff33;border-radius:18px;padding:22px}.price strong{font-size:2.5rem;display:block;color:var(--lime)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:20px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 28px #132a1a08}.card h2{margin:0 0 12px}.field{display:block;margin:12px 0 5px;font-weight:650;font-size:.92rem}input{width:100%;padding:13px;border:1px solid #c9d5ca;border-radius:10px;font:inherit;background:#fff;color:var(--ink)}button{border:0;border-radius:11px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;background:var(--green);color:#fff}button.secondary{background:#e9f0e8;color:var(--green)}button:disabled{opacity:.55;cursor:wait}.full{width:100%;margin-top:12px}.muted{color:var(--muted);font-size:.92rem}.notice{padding:12px 14px;border-radius:10px;background:#edf4e9;margin:12px 0}.error{background:#fff0ef;color:#9a2525}.hidden{display:none!important}.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.stat{background:#eef4ec;border-radius:14px;padding:16px}.stat strong{display:block;font-size:1.7rem}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted)}footer{text-align:center;padding:28px;color:var(--muted);font-size:.85rem}
+@media(max-width:700px){.hero{grid-template-columns:1fr;padding:24px}.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}main{margin-top:18px}}
+</style>
+</head>
+<body>
+<header><div class="brand">Earn <span>Money</span></div><div id="headerAction"></div></header>
+<main>
+<section id="landing">
+  <div class="hero"><div><div style="color:var(--lime);font-weight:800">MEMBER PORTAL</div><h1>Your Earn Money dashboard starts here.</h1><p>Create an account, complete the one-time KSh 150 membership payment, and unlock the member area.</p></div>
+  <div class="price"><div>One-time membership</div><strong>KSh 150</strong><div class="muted" style="color:#d8e7dc">Secure M-Pesa STK Push checkout</div></div></div>
+  <div class="grid">
+    <section class="card"><h2>Create account</h2><p class="muted">New here? Register to continue.</p><form id="signupForm"><label class="field">Full name</label><input name="name" autocomplete="name" required minlength="2" maxlength="80"><label class="field">Email</label><input name="email" type="email" autocomplete="email" required><label class="field">Password (10+ characters)</label><input name="password" type="password" autocomplete="new-password" minlength="10" required><button class="full">Sign up</button></form></section>
+    <section class="card"><h2>Log in</h2><p class="muted">Already registered? Log in securely.</p><form id="loginForm"><label class="field">Email</label><input name="email" type="email" autocomplete="email" required><label class="field">Password</label><input name="password" type="password" autocomplete="current-password" required><button class="full">Log in</button></form><p class="muted">Never share your password or M-Pesa PIN.</p></section>
+  </div>
+</section>
+<section id="appView" class="hidden">
+  <div class="toprow"><div><h1 id="welcome" style="margin-bottom:2px">Dashboard</h1><div class="muted" id="subWelcome"></div></div><button class="secondary" id="logoutBtn">Log out</button></div>
+  <div id="message" class="notice hidden" role="status"></div>
+  <section id="paywall" class="card hidden" style="margin-top:18px"><h2>Unlock your membership</h2><p>Pay <b>KSh 150</b> using M-Pesa. Enter the phone number that should receive the STK Push prompt.</p><form id="paymentForm"><label class="field">M-Pesa phone number</label><input name="phone" inputmode="tel" placeholder="0712345678" required><button class="full">Send M-Pesa prompt</button></form><p class="muted">Enter your M-Pesa PIN only on the official prompt on your phone. This website will never ask for your PIN.</p><button id="checkStatusBtn" class="secondary full">Check payment status</button></section>
+  <section id="memberDash" class="card hidden" style="margin-top:18px"><h2>Member dashboard</h2><p id="memberMessage">Welcome to Earn Money.</p><div class="notice">Your membership is active. Dashboard tools can be added here to match the service you provide.</div><div class="grid"><div class="card"><h3>Membership</h3><p>Paid access</p><span class="muted">Status: Active</span></div><div class="card"><h3>Account</h3><p id="memberEmail"></p><span class="muted">Keep your login details private.</span></div></div></section>
+  <section id="adminDash" class="hidden" style="margin-top:18px"><div class="notice">Administrator view — protect this account and change the default password before deployment.</div><div class="stats"><div class="stat">Members<strong id="statUsers">0</strong></div><div class="stat">Paid members<strong id="statPaid">0</strong></div><div class="stat">Pending payments<strong id="statPending">0</strong></div></div><div class="card"><h2>Recent members</h2><div class="tablewrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Paid</th><th>Joined</th></tr></thead><tbody id="usersRows"></tbody></table></div></div><div class="card" style="margin-top:16px"><h2>Recent payments</h2><div class="tablewrap"><table><thead><tr><th>Email</th><th>Phone</th><th>Amount</th><th>Status</th><th>Receipt</th><th>Date</th></tr></thead><tbody id="paymentsRows"></tbody></table></div></div></section>
+</section>
+</main>
+<footer>Earn Money · Secure membership portal · Never share your M-Pesa PIN.</footer>
+<script>
+const $=id=>document.getElementById(id);
+let currentUser=null, pollTimer=null;
+async function api(url,opts={}) {
+ const r=await fetch(url,{credentials:"same-origin",headers:{"Content-Type":"application/json",...(opts.headers||{})},...opts});
+ let data={}; try{data=await r.json()}catch{}
+ if(!r.ok) throw new Error(data.error||"Something went wrong.");
+ return data;
+}
+function showMessage(text,isError=false){const el=$("message");el.textContent=text;el.className="notice"+(isError?" error":"");el.classList.remove("hidden")}
+function setBusy(form,busy){const b=form.querySelector("button");if(b){b.disabled=busy;b.dataset.old|| (b.dataset.old=b.textContent);b.textContent=busy?"Please wait…":b.dataset.old}}
+function fmtDate(s){return s?new Date(s.replace(" ","T")+"Z").toLocaleString():"—"}
+function renderUser(user){
+ currentUser=user;
+ $("landing").classList.toggle("hidden",!!user);
+ $("appView").classList.toggle("hidden",!user);
+ $("headerAction").innerHTML=user?`<span style="font-size:.9rem">Hi, ${escapeHtml(user.name)}</span>`:"";
+ if(!user)return;
+ $("welcome").textContent=user.role==="admin"?"Admin dashboard":`Hello, ${user.name}`;
+ $("subWelcome").textContent=user.role==="admin"?"Manage members and review payment activity.":"Your Earn Money account";
+ $("paywall").classList.toggle("hidden",!!user.paid||user.role==="admin");
+ $("memberDash").classList.add("hidden");$("adminDash").classList.add("hidden");
+ if(user.role==="admin") loadAdmin();
+ else if(user.paid){$("memberDash").classList.remove("hidden");$("memberEmail").textContent=user.email;$("memberMessage").textContent=`Welcome, ${user.name}. Your membership is active.`}
+ else showMessage("Your account is ready. Complete the KSh 150 payment to unlock the dashboard.");
+}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+async function loadAdmin(){
+ try{
+  const d=await api("/api/dashboard");if(d.role!=="admin")return;
+  $("adminDash").classList.remove("hidden");
+  $("statUsers").textContent=d.stats.users;$("statPaid").textContent=d.stats.paidMembers;$("statPending").textContent=d.stats.pendingPayments;
+  $("usersRows").innerHTML=d.stats.recentUsers.map(u=>`<tr><td>${escapeHtml(u.name)}</td><td>${escapeHtml(u.email)}</td><td>${escapeHtml(u.role)}</td><td>${u.paid?"Yes":"No"}</td><td>${escapeHtml(fmtDate(u.created_at))}</td></tr>`).join("");
+  $("paymentsRows").innerHTML=d.stats.recentPayments.map(p=>`<tr><td>${escapeHtml(p.email)}</td><td>${escapeHtml(p.phone)}</td><td>KSh ${escapeHtml(p.amount)}</td><td>${escapeHtml(p.status)}</td><td>${escapeHtml(p.receipt||"—")}</td><td>${escapeHtml(fmtDate(p.created_at))}</td></tr>`).join("");
+ }catch(e){showMessage(e.message,true)}
+}
+$("signupForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget;setBusy(f,true);try{const d=await api("/api/signup",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(f)))});f.reset();renderUser(d.user)}catch(err){alert(err.message)}finally{setBusy(f,false)}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget;setBusy(f,true);try{const d=await api("/api/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(f)))});f.reset();renderUser(d.user)}catch(err){alert(err.message)}finally{setBusy(f,false)}});
+$("logoutBtn").addEventListener("click",async()=>{try{await api("/api/logout",{method:"POST",body:"{}"})}finally{clearInterval(pollTimer);renderUser(null)}});
+$("paymentForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.currentTarget;setBusy(f,true);try{const d=await api("/api/payment/stk-push",{method:"POST",body:JSON.stringify({phone:f.phone.value})});if(d.alreadyPaid){await refreshMe();return}showMessage(d.message);startPolling()}catch(err){showMessage(err.message,true)}finally{setBusy(f,false)}});
+async function checkStatus(){
+ try{const d=await api("/api/payment/status");if(d.paid){clearInterval(pollTimer);showMessage("Payment confirmed. Your membership is active.");await refreshMe();return true}
+ if(d.payment?.status==="failed")showMessage("Payment failed or was cancelled. You can try again.",true);
+ else if(d.payment?.status==="review")showMessage("Payment received but needs review. Please contact the site administrator.");
+ else showMessage("Payment is still pending. Complete the M-Pesa prompt, then check again.");
+ }catch(e){showMessage(e.message,true)}return false
+}
+function startPolling(){clearInterval(pollTimer);pollTimer=setInterval(checkStatus,5000);setTimeout(()=>clearInterval(pollTimer),180000)}
+$("checkStatusBtn").addEventListener("click",checkStatus);
+async function refreshMe(){const d=await api("/api/me");renderUser(d.user)}
+(async()=>{try{await refreshMe()}catch(e){renderUser(null)}})();
+</script>
+</body>
+</html>
